@@ -2,9 +2,9 @@ name: .NET
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, sqlite3mc ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, sqlite3mc ]
 
 jobs:
   build:
