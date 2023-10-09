@@ -163,6 +163,7 @@ public static class gen
         switch (e)
         {
             case WhichLib.E_SQLITE3: return "e_sqlite3";
+            case WhichLib.E_SQLITE3MC: return "e_sqlite3mc";
             case WhichLib.E_SQLCIPHER: return "e_sqlcipher"; // TODO no e_ prefix in cb yet
             default:
                 throw new NotImplementedException(string.Format("WhichLib.AsString for {0}", e));
@@ -174,6 +175,7 @@ public static class gen
         switch (e)
         {
             case WhichLib.E_SQLITE3: return "e_sqlite3";
+            case WhichLib.E_SQLITE3MC: return "e_sqlite3mc";
             case WhichLib.E_SQLCIPHER: return "e_sqlcipher";
             default:
                 throw new NotImplementedException(string.Format("WhichLib.AsString for {0}", e));
@@ -543,6 +545,107 @@ public static class gen
         }
     }
 
+    private static void gen_nuspec_lib_e_sqlite3mc(string dir_src)
+    {
+        string id = string.Format("{0}.lib.e_sqlite3mc", common.ROOT_NAME);
+
+        var settings = common.XmlWriterSettings_default();
+        settings.OmitXmlDeclaration = false;
+
+        var dir_proj = Path.Combine(dir_src, id);
+        Directory.CreateDirectory(dir_proj);
+        common.gen_dummy_csproj(dir_proj, id);
+
+        using (XmlWriter f = XmlWriter.Create(Path.Combine(dir_proj, string.Format("{0}.nuspec", id)), settings))
+        {
+            f.WriteStartDocument();
+            f.WriteComment("Automatically generated");
+
+            f.WriteStartElement("package", "http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd");
+
+            f.WriteStartElement("metadata");
+            common.write_nuspec_common_metadata(id, f);
+            f.WriteElementString("description", "This package contains platform-specific native code builds of SQLite3 Multiple Ciphers (see utelle/SQLite3MultipleCiphers on GitHub) for use with SQLitePCLRaw.  Note that these SQLite3 Multiple Ciphers builds are unofficial and unsupported.  To use this package, you need SQLitePCLRaw.core as well as one of the SQLitePCLRaw.provider.* packages.  Convenience packages are named SQLitePCLRaw.bundle_*.");
+
+            f.WriteEndElement(); // metadata
+
+            f.WriteStartElement("files");
+
+            write_nuspec_file_entries_from_cb(WhichLib.E_SQLITE3MC, "v142", f);
+
+#if not
+            {
+                var tname = string.Format("{0}.props", id);
+                var path_props = Path.Combine(dir_proj, tname);
+                var relpath_props = nuget_path_combine(".", tname);
+                gen_nuget_props(path_props, WhichLib.E_SQLITE3MC);
+                common.write_nuspec_file_entry(
+                    relpath_props,
+                    "buildTransitive\\",
+                    f
+                    );
+            }
+#endif
+            {
+                var tname = string.Format("{0}.targets", id);
+                Directory.CreateDirectory(Path.Combine(dir_proj, "net461"));
+                var path_targets = Path.Combine(dir_proj, "net461", tname);
+                var relpath_targets = nuget_path_combine(".", "net461", tname);
+                gen_nuget_targets(path_targets, WhichLib.E_SQLITE3MC);
+                common.write_nuspec_file_entry(
+                    relpath_targets,
+                    string.Format("buildTransitive\\{0}", TFM.NET461.AsString()),
+                    f
+                    );
+            }
+#if not
+            {
+                var tname = string.Format("{0}.targets", id);
+                Directory.CreateDirectory(Path.Combine(dir_proj, "xamarin.mac20"));
+                var path_targets = Path.Combine(dir_proj, "xamarin.mac20", tname);
+                var relpath_targets = nuget_path_combine(".", "xamarin.mac20", tname);
+                gen_nuget_targets_legacy_xamarin_mac(path_targets, WhichLib.E_SQLITE3MC);
+                common.write_nuspec_file_entry(
+                    relpath_targets,
+                    string.Format("buildTransitive\\{0}", TFM.XAMARINMAC20.AsString()),
+                    f
+                    );
+            }
+#endif
+#if not
+            {
+                var tname = string.Format("{0}.targets", id);
+                Directory.CreateDirectory(Path.Combine(dir_proj, "net6.0-maccatalyst"));
+                var path_targets = Path.Combine(dir_proj, "net6.0-maccatalyst", tname);
+                var relpath_targets = nuget_combine(".", "net6.0-maccatalyst", tname);
+                gen_nuget_targets_maccatalyst(path_targets, WhichLib.E_SQLITE3MC);
+                common.write_nuspec_file_entry(
+                    relpath_targets,
+                    string.Format("buildTransitive\\{0}", TFM.MACCATALYST.AsString()),
+                    f
+                    );
+            }
+#endif
+
+            write_nuspec_wasm_targets_file_entry(dir_src, id, WhichLib.E_SQLITE3MC, TFM.NET60, f);
+            write_nuspec_wasm_targets_file_entry(dir_src, id, WhichLib.E_SQLITE3MC, TFM.NET70, f);
+            write_nuspec_wasm_targets_file_entry(dir_src, id, WhichLib.E_SQLITE3MC, TFM.NET80, f);
+
+            // TODO need a comment here to explain these
+            common.write_empty(f, TFM.NET461);
+            common.write_empty(f, TFM.NETSTANDARD20);
+#if not
+            common.write_empty(f, TFM.XAMARINMAC20);
+#endif
+
+            f.WriteEndElement(); // files
+
+            f.WriteEndElement(); // package
+
+            f.WriteEndDocument();
+        }
+    }
+
     private static void gen_nuspec_lib_e_sqlcipher(string dir_src)
     {
         string id = string.Format("{0}.lib.e_sqlcipher", common.ROOT_NAME);
@@ -604,6 +707,7 @@ public static class gen
     {
         NONE,
         E_SQLITE3,
+        E_SQLITE3MC,
         E_SQLCIPHER,
     }
 
@@ -878,6 +982,7 @@ public static class gen
         var dir_src = Path.Combine(dir_root, "src");
 
         gen_nuspec_lib_e_sqlite3(dir_src);
+        gen_nuspec_lib_e_sqlite3mc(dir_src);
         gen_nuspec_lib_e_sqlcipher(dir_src);
     }
 }

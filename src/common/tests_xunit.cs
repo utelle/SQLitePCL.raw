@@ -3306,12 +3306,24 @@ namespace SQLitePCL.Tests
             }
         }
 
+        private static bool is_sqlite3mc()
+        {
+            using (sqlite3 db = ugly.open(":memory:"))
+            {
+                var s = db.query_scalar<string>("PRAGMA cipher");
+                return !string.IsNullOrEmpty(s);
+            }
+        }
+
         [Fact]
         public void test_encrypted_file_with_pragma()
         {
-            if (is_sqlcipher())
+            if (is_sqlcipher() || is_sqlite3mc())
             {
-                Assert.Contains("sqlcipher", raw.GetNativeLibraryName());
+                if (is_sqlcipher())
+                    Assert.Contains("sqlcipher", raw.GetNativeLibraryName());
+                else
+                    Assert.Contains("sqlite3mc", raw.GetNativeLibraryName());
                 string name;
                 using (sqlite3 db = ugly.open(":memory:"))
                 {
@@ -3360,15 +3372,19 @@ namespace SQLitePCL.Tests
             else
             {
                 Assert.DoesNotContain("sqlcipher", raw.GetNativeLibraryName());
+                Assert.DoesNotContain("sqlite3mc", raw.GetNativeLibraryName());
             }
         }
 
         [Fact]
         public void test_encrypted_file_with_key()
         {
-            if (is_sqlcipher())
+            if (is_sqlcipher() || is_sqlite3mc())
             {
-                Assert.Contains("sqlcipher", raw.GetNativeLibraryName());
+                if (is_sqlcipher())
+                    Assert.Contains("sqlcipher", raw.GetNativeLibraryName());
+                else
+                    Assert.Contains("sqlite3mc", raw.GetNativeLibraryName());
                 string name;
                 using (sqlite3 db = ugly.open(":memory:"))
                 {
@@ -3427,6 +3443,7 @@ namespace SQLitePCL.Tests
             else
             {
                 Assert.DoesNotContain("sqlcipher", raw.GetNativeLibraryName());
+                Assert.DoesNotContain("sqlite3mc", raw.GetNativeLibraryName());
             }
         }
 

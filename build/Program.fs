@@ -29,6 +29,7 @@ let main argv =
 
     let nuspec_dirs = [
         "lib.e_sqlite3"
+        "lib.e_sqlite3mc"
         "lib.e_sqlcipher"
     ]
 
@@ -47,18 +48,24 @@ let main argv =
         "provider.internal" 
         "provider.winsqlite3" 
         "provider.e_sqlite3" 
+        "provider.e_sqlite3mc" 
         "provider.e_sqlcipher" 
         "provider.sqlite3" 
         "provider.sqlcipher" 
         "lib.e_sqlite3.android"
         "lib.e_sqlite3.ios"
         "lib.e_sqlite3.tvos"
+        "lib.e_sqlite3mc.android"
+        "lib.e_sqlite3mc.ios"
+        "lib.e_sqlite3mc.tvos"
         "lib.e_sqlcipher.android"
         "lib.e_sqlcipher.ios"
         "lib.e_sqlite3"
+        "lib.e_sqlite3mc"
         "lib.e_sqlcipher"
         "bundle_green"
         "bundle_e_sqlite3"
+        "bundle_e_sqlite3mc"
         "bundle_e_sqlcipher"
         "bundle_zetetic"
         "bundle_winsqlite3"
@@ -98,6 +105,7 @@ let main argv =
 
     let fake_xunit_dirs = [
         yield "e_sqlite3"
+        yield "e_sqlite3mc"
         yield "e_sqlcipher"
         if RuntimeInformation.IsOSPlatform(OSPlatform.Windows) then yield "winsqlite3"
         yield "sqlite3"

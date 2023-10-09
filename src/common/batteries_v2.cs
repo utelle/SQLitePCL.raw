@@ -23,8 +23,8 @@ namespace SQLitePCL
     // for source-level compatibility with v1
     public static class Batteries
     {
-	    public static void Init()
-	    {
+        public static void Init()
+        {
             Batteries_V2.Init();
         }
     }
@@ -79,38 +79,42 @@ namespace SQLitePCL
         }
 #endif
 
-	    public static void Init()
-	    {
+        public static void Init()
+        {
 #if EMBEDDED_INIT
             SQLitePCL.lib.embedded.Init();
 #endif
 
 #if PROVIDER_sqlite3
-		    SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_sqlite3());
+            SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_sqlite3());
 #elif PROVIDER_e_sqlite3
-		    SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlite3());
+            SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlite3());
+#elif PROVIDER_e_sqlite3mc
+            SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlite3mc());
 #elif PROVIDER_e_sqlcipher
-		    SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlcipher());
+            SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlcipher());
 #elif PROVIDER_sqlcipher
-		    SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_sqlcipher());
+            SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_sqlcipher());
 #elif PROVIDER_winsqlite3
-		    SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_winsqlite3());
+            SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_winsqlite3());
 #elif PROVIDER_internal
-		    SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_internal());
+            SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_internal());
 #elif PROVIDER_cil
-		    SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_cil());
+            SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_cil());
 #elif PROVIDER_dynamic
 
 #if PROVIDER_NAME_e_sqlite3
-		    DoDynamic_cdecl("e_sqlite3", NativeLibrary.WHERE_RUNTIME_RID | NativeLibrary.WHERE_ADJACENT);
+            DoDynamic_cdecl("e_sqlite3", NativeLibrary.WHERE_RUNTIME_RID | NativeLibrary.WHERE_ADJACENT);
+#elif PROVIDER_NAME_e_sqlite3mc
+            DoDynamic_cdecl("e_sqlite3", NativeLibrary.WHERE_RUNTIME_RID | NativeLibrary.WHERE_ADJACENT);
 #elif PROVIDER_NAME_e_sqlcipher
-		    DoDynamic_cdecl("e_sqlcipher", NativeLibrary.WHERE_RUNTIME_RID | NativeLibrary.WHERE_ADJACENT);
+            DoDynamic_cdecl("e_sqlcipher", NativeLibrary.WHERE_RUNTIME_RID | NativeLibrary.WHERE_ADJACENT);
 #elif PROVIDER_NAME_sqlcipher
-		    DoDynamic_cdecl("sqlcipher", NativeLibrary.WHERE_ARCH); // TODO coordinate with zetetic
+            DoDynamic_cdecl("sqlcipher", NativeLibrary.WHERE_ARCH); // TODO coordinate with zetetic
 #elif PROVIDER_NAME_winsqlite3
-		    DoDynamic_stdcall("winsqlite3", NativeLibrary.WHERE_PLAIN);
+            DoDynamic_stdcall("winsqlite3", NativeLibrary.WHERE_PLAIN);
 #elif PROVIDER_NAME_sqlite3
-		    DoDynamic_cdecl("sqlite3", NativeLibrary.WHERE_PLAIN);
+            DoDynamic_cdecl("sqlite3", NativeLibrary.WHERE_PLAIN);
 #else
 #error batteries_v2.cs built with PROVIDER_dynamic but no PROVIDER_NAME specified
 #endif
@@ -120,7 +124,7 @@ namespace SQLitePCL
 #else
 #error batteries_v2.cs built with nothing specified
 #endif
-	    }
+        }
     }
 }
 
